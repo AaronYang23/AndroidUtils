@@ -1,11 +1,10 @@
-package com.ccw.seeknature.utils;
+package com.seeknature.audio.utils;
 
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
@@ -18,8 +17,8 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ccw.seeknature.Constants;
-import com.ccw.seeknature.R;
+import com.seeknature.audio.Constants;
+import com.seeknature.audio.R;
 
 
 /**
@@ -47,6 +46,23 @@ public class PermissionUtils {
         }
         return false;
     }
+
+
+    /**
+     * desc: 检查一组权限
+     */
+    public static boolean checkManyPermissons(Context context, String[] permissions) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) { //手机版本小于6.0的直接通过   23
+            return true;
+        }
+        for (String s : permissions) {//有一个不通过就不通过
+            if (ContextCompat.checkSelfPermission(context, s) == PackageManager.PERMISSION_DENIED) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     /**
      * desc: 请求单一权限
@@ -133,7 +149,7 @@ public class PermissionUtils {
      */
     private static void toAppDetailSetting(Context context) {
         //这里进行权限被拒绝的处理，就跳转到本应用的程序管理器
-        Toast.makeText(context, "请在权限管理中开启定位权限", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "请在权限管理中开启相关权限", Toast.LENGTH_SHORT).show();
         Intent i = new Intent("android.settings.APPLICATION_DETAILS_SETTINGS");
 
         String pkg = "com.android.settings";
@@ -145,15 +161,26 @@ public class PermissionUtils {
     }
 
 
-    /**
-     * desc: activity or  fragment中回调处理
-     */
+//    /**
+//     * 代码记录：
+//     * desc: activity or  fragment中回调处理
+//     */
 //    @Override
 //    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//LogUtil.i("grantResults:" + grantResults);
-//            LogUtil.i("grantResults  length:" + grantResults.length);
+//        LogUtil.i("grantResults:" + grantResults);
+//        LogUtil.i("grantResults  length:" + grantResults.length);
 //        switch (requestCode) {
 //            case this.PERMISSON_REQUESTCODE:
+
+//                for (int i = 0; i < grantResults.length; i++) {
+//                    if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+//                        LogUtil.i(grantResults[i] + "权限通过");
+//                    } else if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
+//                        PermissionUtils.getRequestPermissionDialog(this).show();
+//                        break;
+//                    }
+//                }
+
 //                if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED
 //                        && grantResults[2] == PackageManager.PERMISSION_GRANTED) {
 ////                    goPage();   todoyourwork
